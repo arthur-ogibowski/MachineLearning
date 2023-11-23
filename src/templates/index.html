@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/index.css') }}">
+
+    <title>Iris </title>
+</head>
+<body>
+    <form method="POST" action="/predict">
+        {{ form.hidden_tag() }}
+        {{ form.csrf_token }}
+
+        {% if not result %}
+
+        <h2> Parametros </h2>
+        <h3>K-nearest Neighbor:<h4> Estima de acordo com os vizinhos usando suas distâncias.</h4></h3><p>1- n_neighbors (int | ex=5) : Número de vizinhos a serem usados para consultas de k-neighbors.</p><p> 2- weight (str | ex=uniform) : Peso dos vizinhos na predição</p><p> 3- leaf_size (int | ex=30) : Numero de pontos a serem usados para procura em força bruta.</p><br>
+        <h3>Multilayer perceptron:<h4> Rede neural composta por camada de neurônios, usa backpropagation para treinar.</h4></h3><p>1- hidden_layer_size (int | ex=3) : O numero de neurônios nas camadas ocultas.</p><p>2- max_iter (int | ex=5) : Número máximo de iterações.</p><p> 3- learning_rate (string | ex=constant) : Taxa de aprendizado.</p><br>
+        <h3>Decision Tree:<h4> Toma decisões de acordo com os atributos dos dados.</h4></h3><p>1- max_depth (int | ex=3) : A profundidade máxima da árvore.</p><p>2- min_samples_leaf (int | ex=1): Número mínimo de samples necessários para estar em uma leaf node.</p><p> 3- criterion (string | ex=entropy) : Função para medir a qualidade de uma divisão.</p><br>
+        <h3>Random Forest:</h3><h4> Conjunto de Decision Trees. Cada árvore faz uma decisão e o resultado final é a média das previsões individuais.</h4><p>1- n_estimators (int | ex=100) : Número de árvores na floresta.</p><p>2- max_depth (int | ex=10) : A profundidade máxima da árvore.</p><p> 3- max_features (int | ex=2) : Número de features a serem consideradas quando procurando a melhor divisão.</p><br>
+
+        {{ form.param1.label }} {{ form.param1 }}
+        {{ form.param2.label }} {{ form.param2 }}
+        {{ form.param3.label }} {{ form.param3 }}
+        {{ form.classifier }}
+        {{ form.submit }}
+        {% endif %}
+
+        {% if result %}
+            <div class="resultados">
+            <p>Acurácia: {{ result.accuracy }}</p>
+            <p>Precisão: {{ result.precision }}</p>
+            <p>Recall: {{ result.recall }}</p>
+            <p>F1-Score: {{ result.f1 }}</p>
+            <img src="data:image/png;base64,{{ result.image }}" alt="Matriz de Confusão">
+            </div>
+        <a href="/">Voltar</a>
+        {% endif %}
+    </form>
+</body>
+</html>
